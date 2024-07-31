@@ -5,6 +5,18 @@ Spring Boot 备忘清单
 
 注：开发 springboot 需要要基本的 java 基础和 maven 基础。
 
+面试问题
+---
+
+### 1.如何解决循环依赖问题？(2024-07-31)
+
+- 1.作用域为单例 singleton 的 bean，`Spring` 框架默认能通过`三级缓存`（SingletonObjects，earlySingletonObjects，SingletonFactories）的方式来解决依赖冲突问题。
+- 2.作用域为 prototype 的 bean，由于调用时是使用的新 bean 实例，那么不存在冲突问题。
+- 3.如果是使用构造器注入的依赖 所导致的循环依赖问题，`Spring` 框架无法直接解决，因为构造器需要在 Bean 实例化之前就确定依赖项，这种情况冲突无法避免。此种情况
+  有三种解决办法：
+  - 3.1 使用 `@Lazy` 注解bean，让其在运行到调用时，才开始初始化。这样可以避免在 Bean 创建时就触发循环依赖问题。
+  - 3.2 使用 `Setter` 方法注入依赖。因为 `Setter` 方法是运行时才调用，那么 bean 创建时不会触发冲突，但这样会导致 bean 依赖关系的不确定性，所以不推荐使用。
+
 入门
 ---
 
