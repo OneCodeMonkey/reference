@@ -7,7 +7,6 @@
 ### todo
 
 1. 整理 mysql 点
-2. algo+3
 3. rpc 框架及文档
 4. websocket 网页demo
 5. JVM要点整理
