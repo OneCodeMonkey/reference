@@ -26,3 +26,7 @@
 1. mysql java 中查询分页的 demo
 2. kafka 基本用法的 java demo
 
+#### 8.9
+1. ✅算法题
+2. ✅neitui
+3. websocket demo
