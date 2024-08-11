@@ -12,6 +12,7 @@
 5. JVM要点整理
 6. 面试题：写两段Java代码，稳定地触发触发一次 Young GC，另一个是稳定地触发一次 Full GC？
 7. 如何在web项目中，接入 Github 三方授权登陆的登陆方式？
+8. 德州扑克算牌概率器，web 版，开源项目：
 
 
 ### Week2
@@ -35,6 +36,7 @@
 1. github 三方登陆方式接入
 2. ✅java abstract 关键字
 3. ✅trading-tool 的波动率报警功能
+4. ✅设置 jenkins 最大保留构建数：配置->general->丢弃旧的构建->最大保留数
 
 总结：Java abstract 关键字用法
 ```text
