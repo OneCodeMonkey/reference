@@ -35,4 +35,3 @@
 1. github 三方登陆方式接入
 2. java abstract 关键字
 3. ✅trading-tool 的波动率报警功能
-4. 整理 mysql 要点
