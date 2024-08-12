@@ -23,11 +23,10 @@ Algorithm算法
 入门
 --------
 
-记录
+2024
 -------
 
-### 2024
-#### 2024-08
+### 2024-08
 ##### leetcode 3249. Count the Number of Good Nodes
 要点：无向图，DFS搜索
 ```java
