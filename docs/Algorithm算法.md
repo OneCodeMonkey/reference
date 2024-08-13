@@ -92,3 +92,18 @@ class Solution {
 }
 
 ```
+
+##### 翻转单链表
+```java 
+public ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode temp = head;
+    while (head != null) {
+        temp = head.next;
+        head.next = prev;
+        prev = head;
+        head = temp;
+    }
+    return prev;
+}
+```
