@@ -23,10 +23,10 @@ Algorithm算法
 入门
 --------
 
-2024
+2024-08
 -------
 
-### 2024-08
+### 2024-08-12
 ##### leetcode 3249. Count the Number of Good Nodes
 要点：无向图，DFS搜索
 ```java
@@ -107,3 +107,141 @@ public ListNode reverseList(ListNode head) {
     return prev;
 }
 ```
+
+### 2024-08-16
+#### LRU cache 实现
+ref: [https://leetcode.com/problems/lru-cache/description/](https://leetcode.com/problems/lru-cache/description/)
+Solution 1： using JAVA collection `linkedHashMap`
+```java
+class LRUCache {
+    private HashMap<Integer, Integer> map;
+
+    public LRUCache(int capacity) {
+        map = new LinkedHashMap<Integer, Integer>(capacity, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry eldest) {
+                return size() > capacity;
+            }
+        };
+    }
+
+    public int get(int key) {
+        return map.getOrDefault(key, -1);
+    }
+
+    public void put(int key, int value) {
+        map.put(key, value);
+    }
+}
+
+```
+
+Solution 2: Raw implementation. Using HashMap + Double linked-list
+```java 
+class LRUCache {
+    HashMap<Integer, LinkedNode> cache = new HashMap<>();
+    private int count, capacity;
+    LinkedNode head, tail;
+
+    class LinkedNode {
+        int key;
+        int value;
+        LinkedNode prev;
+        LinkedNode post;
+    }
+
+    /**
+     * add to head
+     *
+     * @param node
+     */
+    private void addNode(LinkedNode node) {
+        node.prev = head;
+        node.post = head.post;
+        head.post.prev = node;
+        head.post = node;
+    }
+
+    /**
+     * remove from double-linked list
+     *
+     * @param node
+     */
+    private void removeNode(LinkedNode node) {
+        LinkedNode prevNode = node.prev;
+        LinkedNode postNode = node.post;
+        prevNode.post = postNode;
+        postNode.prev = prevNode;
+    }
+
+    /**
+     * move node to head
+     *
+     * @param node
+     */
+    private void moveToHead(LinkedNode node) {
+        removeNode(node);
+        addNode(node);
+    }
+
+    /**
+     * move tail node
+     *
+     * @return
+     */
+    private LinkedNode popTail() {
+        LinkedNode res = tail.prev;
+        removeNode(res);
+
+        return res;
+    }
+
+    public LRUCache(int capacity) {
+        count = 0;
+        this.capacity = capacity;
+
+        head = new LinkedNode();
+        tail = new LinkedNode();
+
+        head.post = tail;
+        tail.prev = head;
+    }
+
+    public int get(int key) {
+        LinkedNode node = cache.get(key);
+        if (node == null) {
+            return -1;
+        }
+        moveToHead(node);
+
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        LinkedNode node = cache.get(key);
+        if (node == null) {
+            LinkedNode newNode = new LinkedNode();
+            newNode.key = key;
+            newNode.value = value;
+            cache.put(key, newNode);
+            addNode(newNode);
+
+            count++;
+            // check if full
+            if (count > capacity) {
+                LinkedNode tailNode = popTail();
+                cache.remove(tailNode.key);
+                count--;
+            }
+        } else {
+            node.value = value;
+            moveToHead(node);
+        }
+    }
+}
+
+```
+
+#### 全排列
+
+#### 全组合
