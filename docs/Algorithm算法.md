@@ -243,5 +243,64 @@ class LRUCache {
 ```
 
 #### 全排列
+`C(n, k)` 的实现： 重点是 Backtracking() 函数的参数设置和定义
+```java
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> ret = new LinkedList<>();
+        List<Integer> temp = new LinkedList<>();
+
+        backtracking(n, k, temp, ret, 1);
+
+        return ret;
+    }
+
+    public void backtracking(int n, int k, List<Integer> path, List<List<Integer>> out, int startIndex) {
+        List<Integer> pathCopy = new LinkedList<>(path);
+        if (path.size() == k) {
+            out.add(pathCopy);
+            return;
+        }
+
+        for (int i = startIndex; i <= n + pathCopy.size() - k + 1; i++) {
+            pathCopy.add(i);
+            backtracking(n, k, pathCopy, out, i + 1);
+            pathCopy.remove(pathCopy.size() - 1);
+        }
+    }
+}
+
+```
 
 #### 全组合
+`P(n, n)` 的实现： 重点在于，permutation 生成时，逐步尝试在当前中间 list 中，遍历每一个插入位置去尝试生成新的 list，直至其长度被填满。
+```java
+// 求 1~n 的全排列
+class Solution {
+    public List<List<Integer>> permutation(int n) {
+        List<List<Integer>> permutations = new ArrayList<>();
+        if (n == 0) {
+            return permutations;
+        }
+
+        collectPermutations(n, 1, new ArrayList<>(), permutations);
+
+        return permutations;
+    }
+
+    private void collectPermutations(int n, int start, List<Integer> permutation, List<List<Integer>> permutations) {
+        if (permutation.size() == n) {
+            permutations.add(permutation);
+            return;
+        }
+
+        // 遍历不同位置插入
+        for (int i = 0; i <= permutation.size(); i++) {
+            List<Integer> newPermutation = new ArrayList<>(permutation);
+            newPermutation.add(i, start);
+            collectPermutations(n, start + 1, newPermutation, permutations);
+        }
+    }
+}
+
+```
