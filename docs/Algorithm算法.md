@@ -307,7 +307,71 @@ class Solution {
 
 ### 2024-08-22
 #### LFU cache 实现
+LFU cache: 按频次淘汰 cache 算法
+实现要点: 一个 hashmap 存 key-value，一个 hashmap 存 key-count，再维护一个不同频率的 count 所对应的元素 double-linked-lists，实现 O(1) 的 put(), get() 效率
 
+```java 
+// Solution 1: Two Hashmap + N double-linked lists. Using `LinkedHashSet()` to simplify double-linked list.
+// Runtime 75 ms Beats 27.03%
+// Memory 142.30 MB Beats 5.38%
+// Two Hashmap + N double-linked lists.
+// T:O(1), S:O(1)
+// 
+class LFUCache {
+    HashMap<Integer, Integer> countTime;
+    HashMap<Integer, Integer> keyToValue;
+    HashMap<Integer, LinkedHashSet<Integer>> timeToKeys;
+    int maxCapacity;
+    int curMinTime = -1;
+
+    public LFUCache(int capacity) {
+        countTime = new HashMap<>();
+        keyToValue = new HashMap<>();
+        timeToKeys = new HashMap<>();
+        maxCapacity = capacity;
+    }
+
+    public int get(int key) {
+        if (!keyToValue.containsKey(key)) {
+            return -1;
+        }
+        int count = countTime.get(key);
+        countTime.put(key, count + 1);
+        timeToKeys.get(count).remove(key);
+        if (count == curMinTime && timeToKeys.get(count).size() == 0) {
+            curMinTime += 1;
+        }
+        if (!timeToKeys.containsKey(count + 1)) {
+            timeToKeys.put(count + 1, new LinkedHashSet<>());
+        }
+        timeToKeys.get(count + 1).add(key);
+
+        return keyToValue.get(key);
+    }
+
+    public void put(int key, int value) {
+        if (maxCapacity <= 0) {
+            return;
+        }
+        if (keyToValue.containsKey(key)) {
+            keyToValue.put(key, value);
+            get(key);
+            return;
+        }
+        if (keyToValue.size() >= maxCapacity) {
+            int removeElem = timeToKeys.get(curMinTime).iterator().next();
+            timeToKeys.get(curMinTime).remove(removeElem);
+            keyToValue.remove(removeElem);
+        }
+        keyToValue.put(key, value);
+        countTime.put(key, 1);
+        curMinTime = 1;
+        timeToKeys.computeIfAbsent(1, k -> new LinkedHashSet<>());
+        timeToKeys.get(1).add(key);
+    }
+}
+
+```
 
 #### Trie 树实现
 Trie 树（字典树）的实现：
