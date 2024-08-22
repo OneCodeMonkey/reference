@@ -304,3 +304,75 @@ class Solution {
 }
 
 ```
+
+### 2024-08-22
+#### LFU cache 实现
+
+
+#### Trie 树实现
+Trie 树（字典树）的实现：
+重点在于 TreeNode 的定义，需要两个指标，一个是 boolean isWord，代表是否是一个有效的 word 的终止点。一个是定义 26 个字符的子节点，代表下一个字符的顺延。
+当然如果支持大小写字母同时存在，那么 children[26] 改为 childrent[52] 也可以达到目的。
+
+```java 
+class TrieTreeNode {
+    // Leaf Node decide whether this node is valid word.
+    boolean isWord;
+    TrieTreeNode[] children;
+
+    TrieTreeNode() {
+        isWord = false;
+        children = new TrieTreeNode[26];
+    }
+}
+
+class Trie {
+    TrieTreeNode root;
+
+    public Trie() {
+        root = new TrieTreeNode();
+    }
+
+    public void insert(String word) {
+        TrieTreeNode parent = root;
+        for (int i = 0; i < word.length(); i++) {
+            int charNum = word.charAt(i) - 'a';
+            if (parent.children[charNum] == null) {
+                parent.children[charNum] = new TrieTreeNode();
+            }
+            parent = parent.children[charNum];
+        }
+
+        parent.isWord = true;
+    }
+
+    public boolean search(String word) {
+        TrieTreeNode parent = root;
+        for (int i = 0; i < word.length(); i++) {
+            int charNum = word.charAt(i) - 'a';
+            if (parent.children[charNum] == null) {
+                return false;
+            }
+            parent = parent.children[charNum];
+        }
+
+        return parent.isWord;
+    }
+
+    public boolean startsWith(String prefix) {
+        TrieTreeNode parent = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            int charNum = prefix.charAt(i) - 'a';
+            if (parent.children[charNum] == null) {
+                return false;
+            }
+            parent = parent.children[charNum];
+        }
+
+        return true;
+    }
+}
+```
+
+
+#### SkipList 实现
