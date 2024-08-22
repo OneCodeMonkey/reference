@@ -309,6 +309,8 @@ class Solution {
 #### LFU cache 实现
 LFU cache: 按频次淘汰 cache 算法
 实现要点: 一个 hashmap 存 key-value，一个 hashmap 存 key-count，再维护一个不同频率的 count 所对应的元素 double-linked-lists，实现 O(1) 的 put(), get() 效率
+ref 1: https://zhuanlan.zhihu.com/p/660174023
+ref 2: https://www.jianshu.com/p/437f53341f67
 
 ```java 
 // Solution 1: Two Hashmap + N double-linked lists. Using `LinkedHashSet()` to simplify double-linked list.
@@ -440,3 +442,89 @@ class Trie {
 
 
 #### SkipList 实现
+SkipList 跳表实现：基于概率的多层链表 的搜索结构，使得查找复杂度能到 logn
+
+```java 
+// 基于概率的 多层链表 数据结构，查找复杂度 log(n)
+// Runtime 18 ms Beats 26.53%
+// Memory 53.35 MB Beats 15.10%
+// implementation.
+// T:O(logn), S:O(logn)
+// 
+class Skiplist {
+    class Node {
+        int val;
+        Node next, down;
+
+        Node(int val, Node next, Node down) {
+            this.val = val;
+            this.next = next;
+            this.down = down;
+        }
+    }
+
+    Node head = new Node(-1, null, null);
+    Random rand = new Random();
+
+    public Skiplist() {
+        //
+    }
+
+    public boolean search(int target) {
+        Node cur = head;
+        while (cur != null) {
+            while (cur.next != null && cur.next.val < target) {
+                cur = cur.next;
+            }
+            if (cur.next != null && cur.next.val == target) {
+                return true;
+            }
+            cur = cur.down;
+        }
+
+        return false;
+    }
+
+    public void add(int num) {
+        Stack<Node> stack = new Stack<>();
+        Node cur = head;
+        while (cur != null) {
+            while (cur.next != null && cur.next.val < num) {
+                cur = cur.next;
+            }
+            stack.push(cur);
+            cur = cur.down;
+        }
+        boolean insert = true;
+        Node down = null;
+        while (insert && !stack.isEmpty()) {
+            cur = stack.pop();
+            cur.next = new Node(num, cur.next, down);
+            down = cur.next;
+            insert = rand.nextDouble() < 0.5;
+        }
+
+        if (insert) {
+            head = new Node(-1, null, head);
+        }
+    }
+
+    public boolean erase(int num) {
+        Node cur = head;
+        boolean isFound = false;
+        while (cur != null) {
+            while (cur.next != null && cur.next.val < num) {
+                cur = cur.next;
+            }
+            if (cur.next != null && cur.next.val == num) {
+                isFound = true;
+                cur.next = cur.next.next;
+            }
+            cur = cur.down;
+        }
+
+        return isFound;
+    }
+}
+
+```
